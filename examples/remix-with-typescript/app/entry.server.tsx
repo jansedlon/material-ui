@@ -3,7 +3,6 @@ import type { EntryContext } from 'remix';
 import { renderToString } from "react-dom/server";
 import createEmotionServer from '@emotion/server/create-instance';
 import createEmotionCache from './createEmotionCache';
-import { CacheProvider } from '@emotion/react';
 
 function renderFullPage(html: string, css: string) {
   return `
@@ -33,11 +32,7 @@ export default function handleRequest(
   const cache = createEmotionCache();
   const { extractCriticalToChunks, constructStyleTagsFromChunks } = createEmotionServer(cache);
 
-  let initialMarkup = renderToString(
-    <CacheProvider value={cache}>
-      <RemixServer context={remixContext} url={request.url} />
-    </CacheProvider>,
-  );
+  let initialMarkup = renderToString(<RemixServer context={remixContext} url={request.url} />);
 
   // This is important. It prevents emotion to render invalid HTML.
   // See https://github.com/mui-org/material-ui/issues/26561#issuecomment-855286153
